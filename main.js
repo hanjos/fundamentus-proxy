@@ -61,6 +61,7 @@ const server = http.createServer(async (request, response) => {
   const { method, headers } = request;
   const query = url.parse(request.url, true).query;
   
+  console.log(`Verificando a presença da chave de API (${API_KEY})...`);
   if(headers['X-API-Key'] !== API_KEY) {
     response.statusCode = 403;
     response.end();
@@ -70,7 +71,7 @@ const server = http.createServer(async (request, response) => {
   let body = await bodyOf(request);
 
   if(method === 'POST') {
-    console.log('Fazendo uma busca');
+    console.log('Fazendo uma busca...');
 
     response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
     response.write(await redirectToBackend(body));
@@ -81,9 +82,9 @@ const server = http.createServer(async (request, response) => {
       response.write('Parâmetro "papel" ausente!');
       response.end();
     } else {
-      console.log('Pegando detalhes de ' + query.papel);
+      console.log('Pegando detalhes de ' + query.papel + '...');
       
-      response.writeHead(200, { 'Content-Type': 'text/html' });
+      response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
       response.write(await getDetailsOf(query.papel));
       response.end();
     }
@@ -91,6 +92,8 @@ const server = http.createServer(async (request, response) => {
     response.statusCode = 405;
     response.end();
   }
+
+  console.log('Fim.');
 });
 
 server.listen(8080);
