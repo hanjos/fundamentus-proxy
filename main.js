@@ -1,5 +1,6 @@
 const http = require('http');
 const url = require('url');
+const fs = require('fs');
 
 function callBackendWith(options) {
   return new Promise((resolve, reject) => {
@@ -54,10 +55,17 @@ function bodyOf(request) {
   });
 }
 
+const API_KEY = process.env.API_KEY;
+
 const server = http.createServer(async (request, response) => {
-  const { method } = request;
+  const { method, headers } = request;
   const query = url.parse(request.url, true).query;
-  console.log(query);
+  
+  if(headers['X-API-Key'] !== API_KEY) {
+    response.statusCode = 403;
+    response.end();
+    return;
+  }
 
   let body = await bodyOf(request);
 
