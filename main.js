@@ -62,7 +62,7 @@ const server = http.createServer(async (request, response) => {
   const { method, headers } = request;
   const query = url.parse(request.url, true).query;
   
-  console.log('Verificando a presença da chave de API (%s) no cabeçalho (%o)...', API_KEY, headers);
+  console.log('Verificando a presença da chave de API no cabeçalho...');
   if(headers['x-api-key'] !== API_KEY) { // XXX têm que ser em minúsculas!
     console.log('Chave de API não encontrada. Requisição rejeitada.');
     response.statusCode = 403;
