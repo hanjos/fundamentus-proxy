@@ -56,13 +56,15 @@ function bodyOf(request) {
 }
 
 const API_KEY = process.env.API_KEY;
+const PORT = process.env.PORT || 8080;
 
 const server = http.createServer(async (request, response) => {
   const { method, headers } = request;
   const query = url.parse(request.url, true).query;
   
-  console.log(`Verificando a presença da chave de API (${API_KEY})...`);
-  if(headers['X-API-Key'] !== API_KEY) {
+  console.log('Verificando a presença da chave de API (%s) no cabeçalho (%o)...', API_KEY, headers);
+  if(headers['x-api-key'] !== API_KEY) { // XXX têm que ser em minúsculas!
+    console.log('Chave de API não encontrada. Requisição rejeitada.');
     response.statusCode = 403;
     response.end();
     return;
@@ -96,4 +98,4 @@ const server = http.createServer(async (request, response) => {
   console.log('Fim.');
 });
 
-server.listen(8080);
+server.listen(PORT);
