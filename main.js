@@ -166,7 +166,7 @@ const server = http.createServer(async (request, response) => {
     console.log('Fazendo uma busca...');
 
     response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
-    response.write(await redirectToBackend('pl_min=0.0&pl_max=12.0&roic_min=0.12&negociada=ON&ordem=1.0', query.clearCache));
+    response.write(await redirectToBackend({pl_min: 0.0, pl_max: 12.0, roic_min: 0.12, negociada: 'ON', ordem: 1.0}, query.clearCache));
     response.end();
   } else if(method === 'GET') {
     if(! query.papel) {
