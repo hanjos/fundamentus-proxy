@@ -100,7 +100,7 @@ function callBackendWith(options) {
     });
 
     req.on('error', (e) => { reject(e.message); });
-    req.write(JSON.stringify(options.body) || '');
+    req.write(options.body || '');
     req.end();
   });
 }
@@ -127,22 +127,22 @@ async function getDetailsOf(stock, clearCache) {
 }
 
 async function redirectToBackend(body, clearCache) {
-  let bodyStr = JSON.stringify(body);
   if(!clearCache) {
-    let cachedValue = await checkCache(cache, bodyStr);
+    let cachedValue = await checkCache(cache, body);
     if(cachedValue) {
       return cachedValue;
     }
   } else {
-    await deleteCache(cache, bodyStr);
+    await deleteCache(cache, body);
   }
 
-  return updateCache(cache, bodyStr, await callBackendWith({
+  return updateCache(cache, body, await callBackendWith({
       host: 'fundamentus.com.br',
       path: '/resultado.php',
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
+        'Content-Length': body.length,
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
       },
       body: body
@@ -167,7 +167,7 @@ const server = http.createServer(async (request, response) => {
     console.log('Fazendo uma busca...');
 
     response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
-    response.write(await redirectToBackend({pl_min: 0.0, pl_max: 12.0, roic_min: 0.12, negociada: 'ON', ordem: 1.0}, query.clearCache));
+    response.write(await redirectToBackend(body, query.clearCache));
     response.end();
   } else if(method === 'GET') {
     if(! query.papel) {
