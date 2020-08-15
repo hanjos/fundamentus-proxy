@@ -12,5 +12,8 @@
   "bugs": {
     "url": "https://github.com/hanjos/fundamentus-proxy/issues"
   },
-  "homepage": "https://github.com/hanjos/fundamentus-proxy#readme"
+  "homepage": "https://github.com/hanjos/fundamentus-proxy#readme",
+  "dependencies": {
+    "redis": "^3.0.2"
+  }
 }
