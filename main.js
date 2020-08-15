@@ -144,7 +144,7 @@ async function redirectToBackend(body, clearCache) {
         'Content-Type': 'application/x-www-form-urlencoded',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
       },
-      body: 'pl_min=0.0&pl_max=12.0&roic_min=0.12&negociada=ON&ordem=1.0'//body
+      body: body
     }));
 }
 
@@ -166,7 +166,7 @@ const server = http.createServer(async (request, response) => {
     console.log('Fazendo uma busca...');
 
     response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
-    response.write(await redirectToBackend(body, query.clearCache));
+    response.write(await redirectToBackend('pl_min=0.0&pl_max=12.0&roic_min=0.12&negociada=ON&ordem=1.0', query.clearCache));
     response.end();
   } else if(method === 'GET') {
     if(! query.papel) {
