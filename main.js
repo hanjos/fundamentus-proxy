@@ -19,16 +19,23 @@ const cache = redis.createClient(
 // se retornar nil, ou não há valor no cache ou o valor é muito antigo
 function checkCache(cache, key) {
   return new Promise((resolve, reject) => {
+    console.log('Resolvendo %s no cache...', key);
     cache.hgetall(key, function (err, val) {
       if(err) {
+        console.error('Erro ao pegar %s no cache: %s', key, err);
         reject(err);
         return;
       }
 
       const now = Date.now();
-      if(!val || val.timestamp <= now - CACHE_TIMEOUT) {
+      if(!val) {
+        console.log('%s não encontrado em cache', key);
+        resolve(nil);
+      } else if (val.timestamp <= now - CACHE_TIMEOUT) {
+        console.log('%s com valor muito antigo (carimbo no cache: %s, carimbo agora: %s)', key, val.timestamp, now);
         resolve(nil);
       } else {
+        console.log('Obtendo o valor de %s no cache', key);
         resolve(val.value);
       }
     });
@@ -37,12 +44,19 @@ function checkCache(cache, key) {
 
 function updateCache(cache, key, value) {
   return new Promise((resolve, reject) => {
+    console.log('Atualizando %s no cache...');
     cache.hmset(key, 
       'timestamp', Date.now(), 
       'value', value,
       (err, v) => {
-        if(err) { reject(err); }
-        else { resolve(value); }
+        if(err) { 
+          console.error('Erro ao atualizar %s no cache: %s', key, err);
+          reject(err); 
+          return;
+        }
+
+        console.log('%s com novo valor no cache', key);
+        resolve(value);
       });
   });
 }
