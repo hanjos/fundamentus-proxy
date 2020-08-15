@@ -1,1 +1,1 @@
-# fundamentus-proxy
+Uma aplicação simples, que permitiu um teste simples de GitHub Actions e Azure.

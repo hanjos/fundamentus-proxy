@@ -142,7 +142,7 @@ async function redirectToBackend(body, clearCache) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Length': body.length,
+        'Content-Length': body.length, // XXX sem isto aqui o POST não funfa!
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
       },
       body: body
