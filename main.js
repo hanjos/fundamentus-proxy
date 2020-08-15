@@ -30,10 +30,10 @@ function checkCache(cache, key) {
       const now = Date.now();
       if(!val) {
         console.log('%s não encontrado em cache', key);
-        resolve(nil);
+        resolve(false);
       } else if (val.timestamp <= now - CACHE_TIMEOUT) {
         console.log('%s com valor muito antigo (carimbo no cache: %s, carimbo agora: %s)', key, val.timestamp, now);
-        resolve(nil);
+        resolve(false);
       } else {
         console.log('Obtendo o valor de %s no cache', key);
         resolve(val.value);
