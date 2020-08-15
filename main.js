@@ -30,10 +30,10 @@ function checkCache(cache, key) {
       const now = Date.now();
       if(!val) {
         console.log('%s não encontrado em cache', key);
-        resolve(false);
+        resolve(false); // resolve(nil) dá erro
       } else if (val.timestamp <= now - CACHE_TIMEOUT) {
         console.log('%s com valor muito antigo (carimbo no cache: %s, carimbo agora: %s)', key, val.timestamp, now);
-        resolve(false);
+        resolve(false); // resolve(nil) dá erro
       } else {
         console.log('Obtendo o valor de %s no cache', key);
         resolve(val.value);
@@ -44,7 +44,7 @@ function checkCache(cache, key) {
 
 function updateCache(cache, key, value) {
   return new Promise((resolve, reject) => {
-    console.log('Atualizando %s no cache...');
+    console.log('Atualizando %s no cache...', key);
     cache.hmset(key, 
       'timestamp', Date.now(), 
       'value', value,
@@ -58,6 +58,22 @@ function updateCache(cache, key, value) {
         console.log('%s com novo valor no cache', key);
         resolve(value);
       });
+  });
+}
+
+function deleteCache(cache, key) {
+  return new Promise((resolve, reject) => {
+    console.log('Limpando %s do cache...', key);
+    cache.hdel(key, (err, v) => {
+      if(err) {
+        console.error('Erro ao limpar %s do cache: %s', key, err);
+        reject(err);
+        return;
+      }
+
+      console.log('%s removido do cache', key);
+      resolve(true);
+    });
   });
 }
 
@@ -89,10 +105,14 @@ function callBackendWith(options) {
   });
 }
 
-async function getDetailsOf(stock) {
-  let cachedValue = await checkCache(cache, stock);
-  if(cachedValue) {
-    return cachedValue;
+async function getDetailsOf(stock, clearCache) {
+  if(!clearCache) {
+    let cachedValue = await checkCache(cache, stock);
+    if(cachedValue) {
+      return cachedValue;
+    }
+  } else {
+    await deleteCache(cache, stock);
   }
 
   return updateCache(cache, stock, await callBackendWith({
@@ -106,10 +126,14 @@ async function getDetailsOf(stock) {
   }));
 }
 
-async function redirectToBackend(body) {
-  let cachedValue = await checkCache(cache, body);
-  if(cachedValue) {
-    return cachedValue;
+async function redirectToBackend(body, clearCache) {
+  if(!clearCache) {
+    let cachedValue = await checkCache(cache, body);
+    if(cachedValue) {
+      return cachedValue;
+    }
+  } else {
+    await deleteCache(cache, body);
   }
 
   return updateCache(cache, body, await callBackendWith({
@@ -142,7 +166,7 @@ const server = http.createServer(async (request, response) => {
     console.log('Fazendo uma busca...');
 
     response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
-    response.write(await redirectToBackend(body));
+    response.write(await redirectToBackend(body, query.clearCache));
     response.end();
   } else if(method === 'GET') {
     if(! query.papel) {
@@ -153,7 +177,7 @@ const server = http.createServer(async (request, response) => {
       console.log('Pegando detalhes de ' + query.papel + '...');
       
       response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
-      response.write(await getDetailsOf(query.papel));
+      response.write(await getDetailsOf(query.papel, query.clearCache));
       response.end();
     }
   } else {
