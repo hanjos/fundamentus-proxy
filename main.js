@@ -64,7 +64,7 @@ function updateCache(cache, key, value) {
 function deleteCache(cache, key) {
   return new Promise((resolve, reject) => {
     console.log('Limpando %s do cache...', key);
-    cache.hdel(key, (err, v) => {
+    cache.del(key, (err, v) => {
       if(err) {
         console.error('Erro ao limpar %s do cache: %s', key, err);
         reject(err);
