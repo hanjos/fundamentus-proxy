@@ -95,7 +95,7 @@ function callBackendWith(options) {
       let result = [];
 
       res.on('data', (chunk) => { result.push(chunk); })
-        .on('end', () => { resolve(Buffer.concat(result).toString()); })
+        .on('end', () => { resolve(Buffer.concat(result).toString().trim()); })
         .on('error', (err) => { reject(err); });
     });
 
