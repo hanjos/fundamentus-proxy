@@ -100,7 +100,7 @@ function callBackendWith(options) {
     });
 
     req.on('error', (e) => { reject(e.message); });
-    req.write(options.body || '');
+    req.write(JSON.stringify(options.body) || '');
     req.end();
   });
 }
