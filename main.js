@@ -127,16 +127,17 @@ async function getDetailsOf(stock, clearCache) {
 }
 
 async function redirectToBackend(body, clearCache) {
+  let bodyStr = JSON.stringify(body);
   if(!clearCache) {
-    let cachedValue = await checkCache(cache, body);
+    let cachedValue = await checkCache(cache, bodyStr);
     if(cachedValue) {
       return cachedValue;
     }
   } else {
-    await deleteCache(cache, body);
+    await deleteCache(cache, bodyStr);
   }
 
-  return updateCache(cache, body, await callBackendWith({
+  return updateCache(cache, bodyStr, await callBackendWith({
       host: 'fundamentus.com.br',
       path: '/resultado.php',
       method: 'POST',
