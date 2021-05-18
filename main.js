@@ -44,7 +44,7 @@ async function getDetailsOf(stock) {
   });
 }
 
-async function redirectToBackend(body) {
+/*async function redirectToBackend(body) {
   return await callBackendWith({
       host: 'fundamentus.com.br',
       path: '/resultado.php',
@@ -56,7 +56,20 @@ async function redirectToBackend(body) {
       },
       body: body
     });
+}*/
+
+async function redirectToBackend(body) {
+  return await callBackendWith({
+      host: 'fundamentus.com.br',
+      path: '/resultado.php',
+      method: 'GET',
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+        'Cookie': "PHPSESSID=9880b6d9d5575ed4a635737b1977fe87; __utma=138951332.1866296538.1534982752.1534982752.1534982752.1; __utmc=138951332; __utmz=138951332.1534982752.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utmt=1; __utmb=138951332.9.10.1534982752"
+      }
+    });
 }
+
 
 const server = http.createServer(async (request, response) => {
   const { method, headers } = request;
