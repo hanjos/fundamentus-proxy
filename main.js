@@ -4,6 +4,9 @@ const url = require('url');
 const API_KEY = process.env.API_KEY;
 const PORT = process.env.PORT || 8080;
 
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36';
+const COOKIE = "__cfduid=d3ec342337c0f3436939392009a7b86781619091765; PHPSESSID=049a1a4e116f9b60d7d77aedc0f90dee; _fbp=fb.2.1619091804951.179535537; __gads=ID=bddb5163528c530d-2225597cd1b300f9:T=1619091766:RT=1619091766:S=ALNI_MZd9DUSgtOb8naC-dhXJ21lDClBTQ; __utmc=138951332; __utmz=138951332.1619091805.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); nv_int=1; privacidade=1; __utma=138951332.512805419.1619091805.1621376741.1621385224.6; __utmt=1; __utmb=138951332.5.10.1621385224";
+
 function bodyOf(request) {
   return new Promise((resolve, reject) => {
     let body = [];
@@ -38,8 +41,8 @@ async function getDetailsOf(stock) {
     path: '/detalhes.php?papel=' + stock,
     method: 'GET',
     headers: {
-      'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
-      'Cookie': "PHPSESSID=9880b6d9d5575ed4a635737b1977fe87; __utma=138951332.1866296538.1534982752.1534982752.1534982752.1; __utmc=138951332; __utmz=138951332.1534982752.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); __utmt=1; __utmb=138951332.9.10.1534982752"
+      'User-Agent': USER_AGENT,
+      'Cookie': COOKIE
     }
   });
 }
@@ -62,7 +65,11 @@ async function redirectToBackend(body) {
   return await callBackendWith({
       host: 'fundamentus.com.br',
       path: '/resultado.php',
-      method: 'GET'
+      method: 'GET',
+      headers: {
+        'User-Agent': USER_AGENT,
+        'Cookie': COOKIE
+      }
   });
 }
 
