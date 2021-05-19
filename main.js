@@ -6,6 +6,7 @@ const PORT = process.env.PORT || 8080;
 
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36';
 const COOKIE = "__cfduid=d3ec342337c0f3436939392009a7b86781619091765; PHPSESSID=049a1a4e116f9b60d7d77aedc0f90dee; _fbp=fb.2.1619091804951.179535537; __gads=ID=bddb5163528c530d-2225597cd1b300f9:T=1619091766:RT=1619091766:S=ALNI_MZd9DUSgtOb8naC-dhXJ21lDClBTQ; __utmc=138951332; __utmz=138951332.1619091805.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); nv_int=1; privacidade=1; __utma=138951332.512805419.1619091805.1621376741.1621385224.6; __utmt=1; __utmb=138951332.5.10.1621385224";
+const ENCODING = 'ISO-8859-1';
 
 function bodyOf(request) {
   return new Promise((resolve, reject) => {
@@ -47,7 +48,7 @@ async function getDetailsOf(stock) {
   });
 }
 
-/*async function redirectToBackend(body) {
+async function redirectToBackend(body) {
   return await callBackendWith({
       host: 'fundamentus.com.br',
       path: '/resultado.php',
@@ -55,24 +56,11 @@ async function getDetailsOf(stock) {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': body.length, // XXX sem isto aqui o POST não funfa!
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/71.0.3578.98 Safari/537.36',
+        'User-Agent': USER_AGENT,
       },
       body: body
     });
-}*/
-
-async function redirectToBackend(body) {
-  return await callBackendWith({
-      host: 'fundamentus.com.br',
-      path: '/resultado.php',
-      method: 'GET',
-      headers: {
-        'User-Agent': USER_AGENT,
-        'Cookie': COOKIE
-      }
-  });
 }
-
 
 const server = http.createServer(async (request, response) => {
   const { method, headers } = request;
@@ -91,7 +79,7 @@ const server = http.createServer(async (request, response) => {
   if(method === 'POST') {
     console.log('Fazendo uma busca...');
 
-    response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
+    response.writeHead(200, { 'Content-Type': 'text/html; charset='+ENCODING });
     response.write(await redirectToBackend(body));
     response.end();
   } else if(method === 'GET') {
@@ -102,7 +90,7 @@ const server = http.createServer(async (request, response) => {
     } else {
       console.log('Pegando detalhes de ' + query.papel + '...');
       
-      response.writeHead(200, { 'Content-Type': 'text/html; charset=latin1' });
+      response.writeHead(200, { 'Content-Type': 'text/html; charset='+ENCODING });
       response.write(await getDetailsOf(query.papel));
       response.end();
     }
