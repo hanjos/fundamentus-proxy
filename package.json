@@ -13,5 +13,7 @@
     "url": "https://github.com/hanjos/fundamentus-proxy/issues"
   },
   "homepage": "https://github.com/hanjos/fundamentus-proxy#readme",
-  "dependencies": {}
+  "dependencies": {
+    "humanoid-js": "^1.0.1"
+  }
 }
