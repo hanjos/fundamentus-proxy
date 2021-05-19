@@ -58,11 +58,7 @@ async function redirectToBackend(body) {
   let response = await humanoid.post(
     'http://fundamentus.com.br/resultado.php',
     body,
-    {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Content-Length': body.length, // XXX sem isto aqui o POST não funfa!
-      'User-Agent': USER_AGENT,
-    },
+    {},
     'json');
 
   return response.body;
