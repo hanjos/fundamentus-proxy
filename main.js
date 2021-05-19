@@ -1,6 +1,6 @@
 const http = require('http');
 const url = require('url');
-const cloudscraper = require('cloudscraper');
+const cloudscraper = require('cloudflare-scraper');
 
 const API_KEY = process.env.API_KEY;
 const PORT = process.env.PORT || 8080;
@@ -19,6 +19,7 @@ function bodyOf(request) {
   });
 }
 
+/*
 function callBackendWith(options) {
   return new Promise((resolve, reject) => {
     const req = http.request(options, (res) => {
@@ -35,7 +36,7 @@ function callBackendWith(options) {
     req.write(options.body || '');
     req.end();
   });
-}
+}*/
 
 async function getDetailsOf(stock) {
   return await cloudscraper.get('http://fundamentus.com.br/detalhes.php?papel='+stock);

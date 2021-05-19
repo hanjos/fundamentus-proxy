@@ -14,7 +14,8 @@
   },
   "homepage": "https://github.com/hanjos/fundamentus-proxy#readme",
   "dependencies": {
-    "cloudscraper": "^4.6.0",
+    "cloudflare-scraper": "^1.0.7",
+    "puppeteer": "^9.1.1",
     "request": "^2.88.2"
   }
 }
