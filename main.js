@@ -44,7 +44,7 @@ async function getDetailsOf(stock) {
     headers: {
       'User-Agent': USER_AGENT
     },
-    jar: true,
+    jar: request.jar(),
   });
 }
 
@@ -64,7 +64,7 @@ async function redirectToBackend(body) {
       'User-Agent': USER_AGENT,
     },
     body: body,
-    jar: true,
+    jar: request.jar(),
   });
 }
 
